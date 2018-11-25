@@ -5,7 +5,7 @@ const pool = new Pool({
   host: 'localhost',
   database: 'sendit',
   password: 123123,
-  port: 5432,
+  port: 5432
 });
 
 export default pool;
