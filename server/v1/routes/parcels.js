@@ -19,8 +19,10 @@ router.post('/', ParcelsController.create);
 router.put('/:id/destination', ParcelsController.destination);
 // // Change package status
 router.put('/:id/status', ParcelsController.changeStatus);
-// // Change present location
-// router.put('/:id/status', ParcelsController.presentLocation);
+
+// get all location by specific parcel
+
+router.get('/:id/locations', ParcelsController.findLocationByParcels);
 
 // export router
 module.exports = router;
