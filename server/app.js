@@ -29,26 +29,6 @@ app.use((req, res, next) => {
     next();
 });
 
-import pool from './db/config';
-// queries
-app.get('/cp', (req,res) =>{
-    // pool.query('CREATE DATABASE members(id SERIAL PRIMARY KEY NOT NULL, names TEXT  NOT NULL)')
-    // .then(response =>{
-    //     res.status(200).json({
-    //         parcels: response.rows
-    //     });
-    // }).catch(err =>{
-    //     console.log(err)
-    // });
-    pool.query("CREATE TABLE members(id SERIAL PRIMARY KEY, firstname VARCHAR(40) NOT NULL, lastName VARCHAR(40) NOT NULL)", (err, res) => {
-        res.send({
-            message:"message"
-        });
-        pool.end();
-    });
-});
-
-
 // Routes which should handle request
 app.use('/api/v1/parcels', parcelRoutes);
 // app.use('/api/v1/queries', queriesRoutes);

@@ -18,14 +18,37 @@ const findAll = (req, res, next) =>{
     });
 };
 // get one order
-const findOne = (req, res, next) =>{ 
-    
+const findOne = (req, res, next) =>{
     const id = parseInt(req.params.id); 
 
     pool.query(`SELECT * from parcels  where id = ${id}`).then(response =>{
-        res.status(200).json({
-            parcel: response.rows
-        });
+        if(response.rows[0]){
+            res.status(200).json({
+                parcel: response.rows[0]
+            });
+        }else{
+            res.json({
+                message: `Whoochs, Parcel with ${id} doesn't exist`
+            });
+        }
+    }).catch(err =>{
+        console.log(err)
+    });    
+};
+// get location by parcels
+const findLocationByParcels = (req, res, next) =>{
+    const id = parseInt(req.params.id); 
+
+        pool.query(`SELECT * from locations  where id_parcel = ${id}`).then(response =>{
+        if(response.rows[0]){
+            res.status(200).json({
+                parcel: response.rows[0]
+            });
+        }else{
+            res.json({
+                message: `Whoochs, Parcel with ${id} doesn't exist`
+            });
+        }
     }).catch(err =>{
         console.log(err)
     });    
@@ -34,14 +57,37 @@ const findOne = (req, res, next) =>{
 //cancel one order
 const cancelOne = (req, res, next) => {
     const id = parseInt(req.params.id); 
-    p
-    pool.query(`UPDATE parcels SET state = 'canceled'  where id = ${id}`).then(response =>{
-        res.status(200).json({
-            message:"Parcel order cancelled successully"
-        });
+    // check the status
+    pool.query(`SELECT state from parcels  where id = ${id}`).then(response =>{
+        // if parcel exist and has 'created' as state
+        console.log(response.rows[0]['state']);
+        if(response.rows[0] && response.rows[0]['state'] === 'created'){ 
+            // proceed to updating parcel order to canceled       
+               pool.query(`UPDATE parcels SET state = 'canceled'  where id = ${id}`).then(response =>{
+                res.status(200).json({
+                    message:"Parcel order cancelled successully"
+                });
+            }).catch(err =>{
+                res.json({
+                    error: err
+                });
+            }); 
+        }else if(response.rows[0]['state'] === 'canceled'){
+            res.json({
+                message: `Whoochs, Parcel with ${id} has been already canceled`
+            });
+        }else{
+            res.json({
+                message: `Whoochs, Parcel with ${id} doesn't exist`
+            });
+        }
     }).catch(err =>{
-        console.log(err)
-    });  
+        res.json({
+            error: err
+        });
+    });    
+
+ 
 }
 // cancel parcel order
 const create = (req, response, next) =>{   
@@ -64,7 +110,7 @@ const create = (req, response, next) =>{
     }
 
     const text = 'INSERT INTO parcels( id_client, title, description, weight, state, pickup, dropoff, distance) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *'
-    const values = [parcel.id_client, parcel.title, parcel.description, parcel.state, parcel.weight, parcel.pickup,  parcel.dropoff,  parcel.distance];
+    const values = [parcel.id_client, parcel.title, parcel.description, parcel.weight, parcel.state, parcel.pickup,  parcel.dropoff,  parcel.distance];
 
     
     // // callback
@@ -156,4 +202,4 @@ function validateLocation(parcel){
     return Joi.validate(parcel, schema);
 }
 
-module.exports = {findAll, findOne, create, cancelOne, destination, changeStatus}
+module.exports = {findAll, findOne, create, cancelOne, destination, changeStatus, findLocationByParcels}

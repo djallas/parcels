@@ -6,26 +6,18 @@ import pool from './../db/config';
 
 
 // /GET parcels by user id
- const findParcelsByUserId= (req, res) => {
-    // const id = req.params.id;
-    // const result = parcels.filter(c => c.id_client == id);
-    // if(result.id_client === id){
-    //     return result
-    // }
-    // res.status(2000).send({
-    //     parcels:result
-    // });
+ const findParcelsByUserId= (req, res) => {    
 
     const id = parseInt(req.params.id); 
-
-    pool.query(`SELECT * from parcels  where id = ${id}`).then(response =>{
+    pool.query(`SELECT * from parcels  where id_client = ${id}`).then(response =>{
+        console.log(response.rows);
         res.status(200).json({
-            parcel: response
+            parcels: response.rows
         });
     }).catch(err =>{
         console.log(err)
     });  
-
+    req.setTimeout(20000);
 };
 
 // sign up
