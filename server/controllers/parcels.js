@@ -45,7 +45,7 @@ const cancelOne = (req, res, next) => {
 }
 // cancel parcel order
 const create = (req, response, next) =>{   
-    console.log("hjanp");
+    // console.log("hjanp");
     const {error} = validateParcel(req.body);
 
     if(error){

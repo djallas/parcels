@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
 // import routes handlers
+// import queriesRoutes from './v1/routes/queries';
 import parcelRoutes from './v1/routes/parcels';
 import userRoutes from './v1/routes/users';
 import locationRoutes from './v1/routes/locations';
@@ -28,52 +29,29 @@ app.use((req, res, next) => {
     next();
 });
 
-// manage swagger document
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json';
+import pool from './db/config';
+// queries
+app.get('/cp', (req,res) =>{
+    // pool.query('CREATE DATABASE members(id SERIAL PRIMARY KEY NOT NULL, names TEXT  NOT NULL)')
+    // .then(response =>{
+    //     res.status(200).json({
+    //         parcels: response.rows
+    //     });
+    // }).catch(err =>{
+    //     console.log(err)
+    // });
+    pool.query("CREATE TABLE members(id SERIAL PRIMARY KEY, firstname VARCHAR(40) NOT NULL, lastName VARCHAR(40) NOT NULL)", (err, res) => {
+        res.send({
+            message:"message"
+        });
+        pool.end();
+    });
+});
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-
-// auth
-
-// import jwt from 'jsonwebtoken';
-
-// app.get('/ap', (req, res) =>{
-//     res.json({ 
-//        text: "my api" 
-//     })
-// })
-
-// // auth
-// app.get('/ap/login', (req, res) =>{
-//     const user = { id: 3};
-//     const token = jwt.sign({ user }, 'my_secret_key');    
-//     res.json({ 
-//        token:token
-//     })
-// })
-// // auth
-// app.get('/ap/protect', ensureToken, (req, res) =>{
-//     res.json({ 
-//        text: "protected" 
-//     })
-// })
-
-// function ensureToken(req, res, next) {
-//     const bearerHeader = req.headers['authorization'];
-//     if(typeof bearerHeader !== 'undefined'){
-//         const bearer = bearerHeader.split(" ");
-//         const bearerHeader = bearer[1];
-//         req.token = bearerToken;
-//         next();
-//     }else{
-//         res.sentStatus(403);
-//     }
-// }
 
 // Routes which should handle request
 app.use('/api/v1/parcels', parcelRoutes);
+// app.use('/api/v1/queries', queriesRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/locations', locationRoutes);
