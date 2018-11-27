@@ -13,6 +13,10 @@ import locationRoutes from './v1/routes/locations';
 import authRoutes from './v1/routes/auth';
 import ErrorController from './controllers/ErrorController';
 
+//import auth middleware
+
+import Auth from './middleware/Auth';
+
 const app = express();
 
 app.use(express.json());
@@ -30,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 // Routes which should handle request
-app.use('/api/v1/parcels', parcelRoutes);
+app.use('/api/v1/parcels', Auth.verifyToken, parcelRoutes);
 // app.use('/api/v1/queries', queriesRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/auth', authRoutes);
