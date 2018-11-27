@@ -5,6 +5,7 @@ import morgan from 'morgan';
 // import body-parser
 import bodyParser from 'body-parser';
 
+
 // import routes handlers
 // import queriesRoutes from './v1/routes/queries';
 import parcelRoutes from './v1/routes/parcels';
@@ -32,6 +33,25 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
+// manage authetication
+
+// import jwt from 'jsonwebtoken';
+
+// app.get('/api/protected', Auth.isAutheticated, (req, res) => {
+//     jwt.verify(req.token, SECRET, function(err, data) {
+//       if (err) {
+//         res.sendStatus(403);
+//       } else {
+//           console.log(data.user);
+//         res.json({
+//           description: 'Protected information. Congrats!'+data
+//         });
+//       }
+//     });
+//   });
+
+  
 
 // Routes which should handle request
 app.use('/api/v1/parcels', Auth.verifyToken, parcelRoutes);

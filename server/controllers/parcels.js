@@ -7,14 +7,22 @@ import locations from './../data/locations';
 
 import pool from './../db/config';
 
+import jwt from 'jsonwebtoken';
+
 // get all parcels orders
 const findAll = (req, res, next) =>{ 
-    pool.query('SELECT * from parcels').then(response =>{
-        res.status(200).json({
-            parcels: response.rows
+    jwt.verify(req.token, process.env.SECRET, function(err, data) {
+      if (err) {
+        res.sendStatus(403);
+      } else {          
+        pool.query('SELECT * from parcels').then(response =>{
+            res.status(200).json({
+                parcels: response.rows
+            });
+        }).catch(err =>{
+            console.log(err)
         });
-    }).catch(err =>{
-        console.log(err)
+      }
     });
 };
 // get one order
