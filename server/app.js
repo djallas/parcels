@@ -26,6 +26,8 @@ app.use(morgan('dev'));
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+import cors from 'cors';
+app.use(cors());
 
 // ALLOW CORS
 app.use((req, res, next) => {
@@ -34,6 +36,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.post('/names', (req,res,next) =>{
+    const name = req.body.name;
+    res.send({
+        name:name
+    });
+})
 // manage authetication
 
 // import jwt from 'jsonwebtoken';

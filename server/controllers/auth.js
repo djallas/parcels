@@ -12,37 +12,29 @@ require('dotenv').config();
 
 // create new user
 exports.createNewUser = (req, response, next) => {
-    console.log("hano");
-    // const {error} = validateUser(req.body);
-
-    // if(error){
-    //     response.status(400).send(error.details[0].message);
-    //     return;
-    // }
-    // const user = {
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     password: req.body.password,
-    //     state: req.body.state,
-    //     role: req.body.role
-    // };
-    
-    // const text = 'INSERT INTO users( name, email, password, state) VALUES($1, $2, $3, $4) RETURNING *'
-    // const values = [user.name, user.email, user.password, user.state];
-    // // callback
-    // pool.query(text, values, (err, res) => {
-    //     if (err) {
-    //         response.send({
-    //             message: err.stack
-    //         });
-    //     } else {
-    //         response.send({
-    //             message: `Account with ${user.email} has been registered successfully!`
-    //         });
-    //     }
-    // });
+    const user = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        state:'active'
+    };
+    console.log(user);
+    const text = 'INSERT INTO users( name, email, password, state) VALUES($1, $2, $3, $4) RETURNING *'
+    const values = [user.name, user.email, user.password, user.state];
+    // callback
+    pool.query(text, values, (err, res) => {
+        if (err) {
+            response.send({
+                message:`Whoochs, Error occurred. Check if the email doesn't already exists`
+            });
+        } else {
+            response.send({
+                message: `Account with ${user.email} has been registered successfully!`
+            });
+        }
+    });
    
-    // req.setTimeout(10000);
+    req.setTimeout(10000);
 }
 
 // login user
