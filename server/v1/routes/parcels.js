@@ -7,8 +7,13 @@ const router = express.Router();
 // import parcels controller
 import ParcelsController from './../../controllers/parcels';
 
+// import jwt from 'jsonwebtoken';
+import Auth from './../../db/jwt';
+// app.get('/api/protected', Auth.isAutheticated, (req, res) => {
+
+// });
 // get all parcels orders
-router.get('/', ParcelsController.findAll);
+router.get('/',  Auth.isAutheticated, ParcelsController.findAll);
 // cancel order
 router.put('/:id/cancel', ParcelsController.cancelOne);
 // get order details
